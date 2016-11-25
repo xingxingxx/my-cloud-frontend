@@ -1,0 +1,4 @@
+build/*.js
+config/*.js
+.idea
+node_modules
