@@ -8,7 +8,7 @@
             <ol class="breadcrumb">
                 <li><a href="/"><i class="fa fa-dashboard"></i> 首页</a></li>
                 <li>
-                    <route-link to="/book"><i class="fa fa-bookmark"></i> 云书签</route-link>
+                    <route-link to="/bookmark"><i class="fa fa-bookmark"></i> 云书签</route-link>
                 </li>
                 <li class="active">编辑书签</li>
             </ol>

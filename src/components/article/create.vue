@@ -2,15 +2,15 @@
     <div>
         <section class="content-header">
             <h1>
-                新增书签
-                <small>create book</small>
+                添加文章
+                <small>create post</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="/"><i class="fa fa-dashboard"></i> 首页</a></li>
                 <li>
-                    <route-link to="/book"><i class="fa fa-bookmark"></i> 云书签</route-link>
+                    <route-link to="/article"><i class="fa fa-paper-plane"></i> 云文章</route-link>
                 </li>
-                <li class="active">新增书签</li>
+                <li class="active">添加文章</li>
             </ol>
         </section>
         <section class="content">
@@ -18,35 +18,35 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">新增书签</h3>
+                            <h3 class="box-title">添加文章</h3>
                         </div>
                         <!-- /.box-header -->
                         <!-- form start -->
                         <form role="form">
                             <div class="box-body">
                                 <div class="form-group">
-                                    <label for="name">书签名称</label>
+                                    <label for="name">标题</label>
                                     <input type="text" class="form-control" id="name"
-                                           placeholder="自定义书签名称">
-                                    <p class="help-block">为空则系统自动填写</p>
-                                </div>
-                                <div class="form-group">
-                                    <label for="url">书签路径</label>
-                                    <input type="text" class="form-control" id="url"
-                                           placeholder="网站路径">
-                                    <p class="help-block">如：http://www.example.com</p>
+                                           placeholder="未定义标题">
                                 </div>
                                 <div class="form-group">
                                     <label for="categories">分类</label>
                                     <select class="form-control" id="categories">
-                                        <option value="0">论坛社区</option>
-                                        <option value="0">客户网站</option>
-                                        <option value="0">开发工具</option>
+                                        <option value="0">前端开发</option>
+                                        <option value="0">架构思想</option>
+                                        <option value="0">框架</option>
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sign">标签</label>
+                                    <input type="text" class="form-control" id="sign" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="content">内容</label>
+                                    <textarea class="form-control" id="content" rows="20"></textarea>
                                 </div>
                             </div>
                             <!-- /.box-body -->
-
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </div>

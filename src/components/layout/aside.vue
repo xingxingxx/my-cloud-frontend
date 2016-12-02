@@ -25,21 +25,21 @@
             <ul class="sidebar-menu">
                 <li class="header">操作面板</li>
                 <li :class="{active:$route.path.indexOf('/home')>=0}">
-                    <router-link to="/home">
+                    <router-link to="/">
                         <i class="fa fa-home"></i>
                         <span>我的面板</span>
                     </router-link>
                 </li>
                 <li :class="{active:$route.path.indexOf('/book')>=0}">
-                    <router-link to="/book">
+                    <router-link to="/bookmark">
                         <i class="fa fa-bookmark"></i>
                         <span>云书签</span>
                     </router-link>
                 </li>
                 <li :class="{active:$route.path.indexOf('/post')>=0}">
-                    <router-link to="/post">
+                    <router-link to="/article">
                         <i class="fa fa-paper-plane"></i>
-                        <span>云收藏</span>
+                        <span>云文章</span>
                     </router-link>
                 </li>
             </ul>

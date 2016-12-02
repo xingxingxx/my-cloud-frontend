@@ -2,15 +2,15 @@
     <div>
         <section class="content-header">
             <h1>
-                添加文章
+                编辑文章
                 <small>create post</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="/"><i class="fa fa-dashboard"></i> 首页</a></li>
                 <li>
-                    <route-link to="/book"><i class="fa fa-paper-plane"></i> 云文章</route-link>
+                    <route-link to="/article"><i class="fa fa-paper-plane"></i> 云文章</route-link>
                 </li>
-                <li class="active">添加文章</li>
+                <li class="active">编辑文章</li>
             </ol>
         </section>
         <section class="content">
@@ -18,7 +18,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">添加文章</h3>
+                            <h3 class="box-title">编辑文章</h3>
                         </div>
                         <!-- /.box-header -->
                         <!-- form start -->
