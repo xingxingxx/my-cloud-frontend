@@ -106,7 +106,7 @@
                                     <a href="#" class="btn btn-default btn-flat">个人主页</a>
                                 </div>
                                 <div class="pull-right">
-                                    <router-link to="/login" class="btn btn-default btn-flat">注销登录</router-link>
+                                    <button v-on:click="logout" class="btn btn-default btn-flat">注销登录</button>
                                 </div>
                             </li>
                         </ul>
@@ -117,3 +117,24 @@
     </header>
 </template>
 
+<script>
+  export default {
+    name: 'Header',
+    data: function () {
+      return {
+        user: 'Head'
+      }
+    },
+    methods: {
+      logout: function () {
+        this.$store.commit('SET_USER', null)
+        this.$store.commit('SET_TOKEN', null)
+        if (window.localStorage) {
+          window.localStorage.setItem('user', null)
+          window.localStorage.setItem('token', null)
+        }
+        this.$router.push('/login')
+      }
+    }
+  }
+</script>

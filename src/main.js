@@ -14,11 +14,19 @@ Vue.filter('pluralize', pluralize)
 Vue.use(VueRouter)
 Vue.use(Resource)
 
+// Check local storage to handle refreshes
+if (window.localStorage) {
+  if (store.state.user !== window.localStorage.getItem('user')) {
+    store.commit('SET_USER', JSON.parse(window.localStorage.getItem('user')))
+    store.commit('SET_TOKEN', window.localStorage.getItem('token'))
+  }
+}
+
 Vue.http.interceptors.push((request, next) => {
   var headers = request.headers
   // 进入系统前在header中添加token
   if (window.location.pathname !== '/login' && !headers.hasOwnProperty('Authorization')) {
-    headers.Authorization = this.$store.state.token
+    headers.Authorization = store.state.token
   }
   // console.log(headers)
   next()
@@ -33,16 +41,18 @@ var router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // window.console.log('Transition', transition)
-  if (to.auth && (to.router.app.$store.state.token === 'null')) {
-    window.console.log('Not authenticated')
-    next({
+  if ((to.matched.some(record => record.meta.auth)) && (store.state.user == null)) {
+    return next({
       path: '/login',
       query: { redirect: to.fullPath }
     })
-  } else {
-    next()
   }
+  if ((to.path === '/login') && (store.state.user !== null)) {
+    return next({
+      path: '/'
+    })
+  }
+  next()
 })
 
 new Vue({
@@ -50,12 +60,3 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#root')
-
-// Check local storage to handle refreshes
-if (window.localStorage) {
-  if (store.state.user !== window.localStorage.getItem('user')) {
-    store.dispatch('SET_USER', JSON.parse(window.localStorage.getItem('user')))
-    store.dispatch('SET_TOKEN', window.localStorage.getItem('token'))
-  }
-}
-

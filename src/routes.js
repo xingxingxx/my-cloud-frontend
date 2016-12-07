@@ -6,7 +6,7 @@ const routes = [
   {
     path: '/',
     component: require('./components/Main.vue'),
-    auth: true,
+    meta: { auth: true },
     children: [
       {
         path: '',

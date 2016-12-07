@@ -7,8 +7,8 @@
             <p class="login-box-msg">登录</p>
             <form action="/" method="get" @submit.prevent="checkCreds">
                 <div class="form-group has-feedback">
-                    <input type="text" class="form-control" placeholder="帐号" name="username" v-model="username">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    <input type="email" class="form-control" placeholder="注册邮箱" name="email" v-model="email">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
                     <input type="password" class="form-control" placeholder="密码" name="password" v-model="password">
@@ -33,7 +33,7 @@ module.exports = {
   data: function (router) {
     return {
       loading: '',
-      username: '',
+      email: '',
       password: '',
       response: ''
     }
@@ -45,10 +45,10 @@ module.exports = {
       var store = this.$store
       this.toggleLoading()
       this.resetResponse()
-      store.dispatch('TOGGLE_LOADING')
+      store.commit('TOGGLE_LOADING')
       //  Login
-      this.$parent.callAPI('POST', '/login', { username: this.username, password: this.password }).then(function (response) {
-        store.dispatch('TOGGLE_LOADING')
+      this.$http.post(store.state.serverURI + '/login', {email: this.email, password: this.password}).then(function (response) {
+        store.commit('TOGGLE_LOADING')
         if (response.data) {
           var data = response.data
           if (data.error) {
@@ -63,15 +63,15 @@ module.exports = {
           } else {
             //  success. Let's load up the dashboard
             if (data.user) {
-              store.dispatch('SET_USER', data.user)
+              store.commit('SET_USER', data.user)
               var token = 'Bearer ' + data.token
-              store.dispatch('SET_TOKEN', token)
+              store.commit('SET_TOKEN', token)
               // Save to local storage as well
               if (window.localStorage) {
                 window.localStorage.setItem('user', JSON.stringify(data.user))
                 window.localStorage.setItem('token', token)
               }
-              this.$router.push(data.redirect)
+              this.$router.push('/')
             }
           }
         } else {
@@ -80,9 +80,9 @@ module.exports = {
         self.toggleLoading()
       }, function (response) {
         // error
-        store.dispatch('TOGGLE_LOADING')
+        store.commit('TOGGLE_LOADING')
         console.log('Error', response)
-        self.response = '服务器似乎处于脱机状态'
+        self.response = '用户名或密码错误！'
         self.toggleLoading()
       })
     },
