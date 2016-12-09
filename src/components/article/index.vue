@@ -29,42 +29,14 @@
                                 <th>创建时间</th>
                                 <th style="width: 140px">操作</th>
                             </tr>
-                            <tr>
-                                <td>1.</td>
+                            <tr v-for="article in articles">
+                                <td>{{ article.id }}.</td>
+                                <td>{{ article.title }}</td>
+                                <td>{{ article.category_id }}</td>
+                                <td><span class="label label-default">{{ article.abstract }}</span></td>
+                                <td>{{ article.created_at }}</td>
                                 <td>
-                                    <router-link to="/article/show">
-                                        Web 研发模式演变
-                                    </router-link>
-                                </td>
-                                <td>前端开发</td>
-                                <td>
-                                    <span class="label label-default">web</span>
-                                    <span class="label label-default">架构</span>
-                                </td>
-                                <td>2016-11-15 11:30:22</td>
-                                <td>
-                                    <router-link to="/article/edit" class="btn btn-primary btn-xs">
-                                        <i class="fa fa-edit"></i> 编辑
-                                    </router-link>
-                                    <a href="#" class="btn btn-danger btn-xs"><i
-                                            class="fa fa-trash"></i> 删除</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2.</td>
-                                <td>
-                                    <router-link to="/article/show">
-                                        什么是 RESTful?
-                                    </router-link>
-                                </td>
-                                <td>设计模式</td>
-                                <td>
-                                    <span class="label label-default">php</span>
-                                    <span class="label label-default">架构</span>
-                                </td>
-                                <td>2016-11-15 11:30:22</td>
-                                <td>
-                                    <router-link to="/article/edit" class="btn btn-primary btn-xs">
+                                    <router-link to="/bookmark/edit" class="btn btn-primary btn-xs">
                                         <i class="fa fa-edit"></i> 编辑
                                     </router-link>
                                     <a href="#" class="btn btn-danger btn-xs"><i
@@ -83,13 +55,7 @@
                                 </router-link>
                             </div>
                             <div class="col-sm-7 clearfix">
-                                <ul class="pagination pagination-sm no-margin pull-right">
-                                    <li><a href="#">«</a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">»</a></li>
-                                </ul>
+                               <pagebar :cur.sync="cur" :all.sync="all" v-on:page-change="fetchData"></pagebar>
                             </div>
                         </div>
 
@@ -102,3 +68,46 @@
         </div>
     </section>
 </template>
+
+<script>
+  import pagebar from '../unit/pagebar'
+  export default {
+    data: function (router) {
+      return {
+        cur: 1,
+        all: 0,
+        articles: null
+      }
+    },
+    components: {
+      pagebar
+    },
+    created () {
+      this.fetchData(this.cur)
+    },
+    methods: {
+      fetchData (page) {
+        this.cur = page
+        var store = this.$store
+        store.commit('TOGGLE_LOADING')
+        this.$http.get(store.state.serverURI + '/articles?page=' + page).then(function (response) {
+          store.commit('TOGGLE_LOADING')
+          this.all = response.data.last_page
+          this.cur = response.data.current_page
+          this.articles = response.data.data
+        }, function (response) {
+          store.commit('TOGGLE_LOADING')
+          if (response.data.status_code === 401) {
+            this.$store.commit('SET_USER', null)
+            this.$store.commit('SET_TOKEN', null)
+            if (window.localStorage) {
+              window.localStorage.setItem('user', null)
+              window.localStorage.setItem('token', null)
+            }
+            this.$router.push('/login')
+          }
+        })
+      }
+    }
+  }
+</script>

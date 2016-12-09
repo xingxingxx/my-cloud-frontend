@@ -30,13 +30,13 @@
                         <span>我的面板</span>
                     </router-link>
                 </li>
-                <li :class="{active:$route.path.indexOf('/book')>=0}">
+                <li :class="{active:$route.path.indexOf('/bookmark')>=0}">
                     <router-link to="/bookmark">
                         <i class="fa fa-bookmark"></i>
                         <span>云书签</span>
                     </router-link>
                 </li>
-                <li :class="{active:$route.path.indexOf('/post')>=0}">
+                <li :class="{active:$route.path.indexOf('/article')>=0}">
                     <router-link to="/article">
                         <i class="fa fa-paper-plane"></i>
                         <span>云文章</span>

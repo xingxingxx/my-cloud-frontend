@@ -51,43 +51,41 @@ module.exports = {
         store.commit('TOGGLE_LOADING')
         if (response.data) {
           var data = response.data
-          if (data.error) {
-            if (data.error.name) { //  Object from LDAP at this point
-              switch (data.error.name) {
-                case 'InvalidCredentialsError' : self.response = 'Username/Password incorrect. Please try again.'; break
-                default: self.response = data.error.name
-              }
-            } else {
-              self.response = data.error
+          if (data.user) {
+            store.commit('SET_USER', data.user)
+            var token = 'Bearer ' + data.token
+            store.commit('SET_TOKEN', token)
+            // Save to local storage as well
+            if (window.localStorage) {
+              window.localStorage.setItem('user', JSON.stringify(data.user))
+              window.localStorage.setItem('token', token)
             }
-          } else {
-            //  success. Let's load up the dashboard
-            if (data.user) {
-              store.commit('SET_USER', data.user)
-              var token = 'Bearer ' + data.token
-              store.commit('SET_TOKEN', token)
-              // Save to local storage as well
-              if (window.localStorage) {
-                window.localStorage.setItem('user', JSON.stringify(data.user))
-                window.localStorage.setItem('token', token)
-              }
-              this.$router.push('/')
-            }
+            this.$router.push('/')
           }
         } else {
-          self.response = 'Did not receive a response. Please try again in a few minutes'
+          self.response = '未收到回复，请几分钟后重试！'
         }
         self.toggleLoading()
       }, function (response) {
-        // error
         store.commit('TOGGLE_LOADING')
+        if (response.data) {
+          var data = response.data
+          if (data.error && data.error === 'invalid_credentials') {
+            self.response = '用户名或密码错误，请重试！'
+          } else if (data.error) {
+            self.response = data.error
+          } else if (data.message) {
+            self.respons = data.message
+          }
+        } else {
+          self.response = '不好，服务器似乎连不上了！'
+        }
         console.log('Error', response)
-        self.response = '用户名或密码错误！'
         self.toggleLoading()
       })
     },
     toggleLoading: function () {
-      this.loading = (this.loading === '') ? 'loading' : ''
+      this.loading = (this.loading === '') ? 'bg-navy' : ''
     },
     resetResponse: function () {
       this.response = ''

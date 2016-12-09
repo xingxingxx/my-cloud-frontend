@@ -28,24 +28,11 @@
                                 <th>创建时间</th>
                                 <th style="width: 140px">操作</th>
                             </tr>
-                            <tr>
-                                <td>1.</td>
-                                <td><a href="https://laravel-china.org/" target="_blank">laravel中文社区</a></td>
-                                <td>论坛社区</td>
-                                <td>2016-11-15 11:30:22</td>
-                                <td>
-                                    <router-link to="/bookmark/edit" class="btn btn-primary btn-xs">
-                                        <i class="fa fa-edit"></i> 编辑
-                                    </router-link>
-                                    <a href="#" class="btn btn-danger btn-xs"><i
-                                            class="fa fa-trash"></i> 删除</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2.</td>
-                                <td><a href="https://github.com/" target="_blank">github</a></td>
-                                <td>开发工具</td>
-                                <td>2016-11-15 11:30:22</td>
+                            <tr v-for="bookmark in bookmarks">
+                                <td>{{ bookmark.id }}.</td>
+                                <td><a v-bind:href="bookmark.url" target="_blank">{{ bookmark.title }}</a></td>
+                                <td>{{ bookmark.category_id }}</td>
+                                <td>{{ bookmark.created_at }}</td>
                                 <td>
                                     <router-link to="/bookmark/edit" class="btn btn-primary btn-xs">
                                         <i class="fa fa-edit"></i> 编辑
@@ -72,13 +59,7 @@
                                 </router-link>
                             </div>
                             <div class="col-sm-7 clearfix">
-                                <ul class="pagination pagination-sm no-margin pull-right">
-                                    <li><a href="#">«</a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">»</a></li>
-                                </ul>
+                                <pagebar :cur.sync="cur" :all.sync="all" v-on:page-change="fetchData"></pagebar>
                             </div>
                         </div>
 
@@ -91,3 +72,46 @@
         </div>
     </section>
 </template>
+
+<script>
+  import pagebar from '../unit/pagebar'
+  export default {
+    data: function (router) {
+      return {
+        cur: 1,
+        all: 0,
+        bookmarks: null
+      }
+    },
+    components: {
+      pagebar
+    },
+    created () {
+      this.fetchData(this.cur)
+    },
+    methods: {
+      fetchData (page) {
+        this.cur = page
+        var store = this.$store
+        store.commit('TOGGLE_LOADING')
+        this.$http.get(store.state.serverURI + '/bookmarks?page=' + page).then(function (response) {
+          store.commit('TOGGLE_LOADING')
+          this.all = response.data.last_page
+          this.cur = response.data.current_page
+          this.bookmarks = response.data.data
+        }, function (response) {
+          store.commit('TOGGLE_LOADING')
+          if (response.data.status_code === 401) {
+            this.$store.commit('SET_USER', null)
+            this.$store.commit('SET_TOKEN', null)
+            if (window.localStorage) {
+              window.localStorage.setItem('user', null)
+              window.localStorage.setItem('token', null)
+            }
+            this.$router.push('/login')
+          }
+        })
+      }
+    }
+  }
+</script>

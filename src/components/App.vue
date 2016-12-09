@@ -13,14 +13,14 @@
         section: 'Head',
         version: '0.10.0',
         callingAPI: false,
-        serverURI: 'http://my-cloud-api.app:8000/api',
+        serverURI: 'http://10.110.1.10:8080',
         caller: this.$http
       }
     },
     methods: {
       callAPI: function (method, url, data) {
         this.callingAPI = true
-        url = this.serverURI + url // if no url is passed then inheret local server URI
+        url = url || this.serverURI // if no url is passed then inheret local server URI
         return this.caller({
           url: url,
           method: method,
@@ -28,8 +28,8 @@
         })
       },
       logout: function () {
-        this.$store.commit('SET_USER', null)
-        this.$store.commit('SET_TOKEN', null)
+        this.$store.dispatch('SET_USER', null)
+        this.$store.dispatch('SET_TOKEN', null)
         if (window.localStorage) {
           window.localStorage.setItem('user', null)
           window.localStorage.setItem('token', null)

@@ -88,16 +88,15 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             <img src="/static/img/stock/user1-128x128.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">Deboy</span>
+                            <span class="hidden-xs">{{ state.user.name }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="/static/img/stock/user1-128x128.jpg" class="img-circle" alt="User Image">
-
                                 <p>
-                                    Deboy - 前端工程师
-                                    <small>2015-10</small>
+                                    {{ state.user.name }}
+                                    <small>{{ state.user.created_at }}</small>
                                 </p>
                             </li>
                             <!-- Menu Footer-->
@@ -118,23 +117,26 @@
 </template>
 
 <script>
-  export default {
-    name: 'Header',
-    data: function () {
-      return {
-        user: 'Head'
-      }
+export default {
+  computed: {
+    store: function () {
+      return this.$store
     },
-    methods: {
-      logout: function () {
-        this.$store.commit('SET_USER', null)
-        this.$store.commit('SET_TOKEN', null)
-        if (window.localStorage) {
-          window.localStorage.setItem('user', null)
-          window.localStorage.setItem('token', null)
-        }
-        this.$router.push('/login')
+    state: function () {
+      return this.store.state
+    }
+  },
+  methods: {
+    logout: function () {
+      this.$store.commit('SET_USER', null)
+      this.$store.commit('SET_TOKEN', null)
+      if (window.localStorage) {
+        window.localStorage.setItem('user', null)
+        window.localStorage.setItem('token', null)
       }
+      this.$router.push('/login')
     }
   }
+}
 </script>
+

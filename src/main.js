@@ -26,7 +26,8 @@ Vue.http.interceptors.push((request, next) => {
   var headers = request.headers
   // 进入系统前在header中添加token
   if (window.location.pathname !== '/login' && !headers.hasOwnProperty('Authorization')) {
-    headers.Authorization = store.state.token
+    // headers.Authorization = store.state.token
+    headers.set('Authorization', store.state.token)
   }
   // console.log(headers)
   next()
