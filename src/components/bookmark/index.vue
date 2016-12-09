@@ -1,5 +1,6 @@
 <template>
     <section class="content">
+        <router-view></router-view>
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">

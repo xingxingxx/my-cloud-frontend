@@ -18,7 +18,21 @@ const routes = [
         path: '/bookmark',
         component: require('./components/bookmark/index.vue'),
         name: 'Bookmark',
-        meta: { description: '云书签' }
+        meta: { description: '云书签' },
+        children: [
+          {
+            path: 'create',
+            component: require('./components/bookmark/create.vue'),
+            name: 'BookMarkCreate',
+            meta: { description: '新增书签' }
+          },
+          {
+            path: 'edit',
+            component: require('./components/bookmark/edit.vue'),
+            name: 'BookMarkEdit',
+            meta: { description: '编辑书签' }
+          }
+        ]
       },
       {
         path: '/article',
