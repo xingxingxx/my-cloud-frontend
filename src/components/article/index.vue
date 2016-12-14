@@ -55,7 +55,7 @@
                                 </router-link>
                             </div>
                             <div class="col-sm-7 clearfix">
-                               <pagebar :cur.sync="cur" :all.sync="all" v-on:page-change="fetchData"></pagebar>
+                               <pagebar :cur="cur" :all="all" v-on:page-change="fetchData"></pagebar>
                             </div>
                         </div>
 
@@ -93,7 +93,6 @@
         this.$http.get(store.state.serverURI + '/articles?page=' + page).then(function (response) {
           store.commit('TOGGLE_LOADING')
           this.all = response.data.last_page
-          this.cur = response.data.current_page
           this.articles = response.data.data
         }, function (response) {
           store.commit('TOGGLE_LOADING')

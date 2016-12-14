@@ -1,6 +1,5 @@
 <template>
     <section class="content">
-        <router-view></router-view>
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">
@@ -35,11 +34,12 @@
                                 <td>{{ bookmark.category_id }}</td>
                                 <td>{{ bookmark.created_at }}</td>
                                 <td>
-                                    <router-link to="/bookmark/edit" class="btn btn-primary btn-xs">
+                                    <button class="btn btn-primary btn-xs" v-on:click="editData(bookmark)">
                                         <i class="fa fa-edit"></i> 编辑
-                                    </router-link>
-                                    <a href="#" class="btn btn-danger btn-xs"><i
-                                            class="fa fa-trash"></i> 删除</a>
+                                    </button>
+                                    <button class="btn btn-danger btn-xs" v-on:click="deleteData(bookmark.id)">
+                                        <i class="fa fa-trash"></i>删除
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -49,18 +49,12 @@
                     <div class="box-footer" style="border:none;">
                         <div class="row">
                             <div class="col-sm-5">
-                                <router-link to="/bookmark/create" class="btn btn-primary btn-sm">
+                                <button class="btn btn-primary btn-sm" v-on:click="createData">
                                     <i class="fa fa-plus"></i> 添加
-                                </router-link>
-                                <router-link to="/bookmark/create" class="btn btn-primary btn-sm">
-                                    <i class="fa fa-upload"></i> 导入
-                                </router-link>
-                                <router-link to="/bookmark/create" class="btn btn-primary btn-sm">
-                                    <i class="fa fa-download"></i> 导出
-                                </router-link>
+                                </button>
                             </div>
                             <div class="col-sm-7 clearfix">
-                                <pagebar :cur.sync="cur" :all.sync="all" v-on:page-change="fetchData"></pagebar>
+                                <pagebar :cur="cur" :all="all" v-on:page-change="fetchData"></pagebar>
                             </div>
                         </div>
 
@@ -71,21 +65,30 @@
         </div>
         <!-- /.col -->
         </div>
+        <create :showCreate="showCreate" v-on:save-data="fetchData"></create>
+        <edit :showEdit="showEdit" :origin_bookmark="origin_bookmark" v-on:save-data="fetchData"></edit>
     </section>
 </template>
 
 <script>
   import pagebar from '../unit/pagebar'
+  import create from './create.vue'
+  import edit from './edit.vue'
   export default {
     data: function (router) {
       return {
         cur: 1,
         all: 0,
-        bookmarks: null
+        bookmarks: null,
+        origin_bookmark: {},
+        showCreate: false,
+        showEdit: false
       }
     },
     components: {
-      pagebar
+      pagebar,
+      create,
+      edit
     },
     created () {
       this.fetchData(this.cur)
@@ -93,13 +96,40 @@
     methods: {
       fetchData (page) {
         this.cur = page
+        this.showCreate = false
+        this.showEdit = false
         var store = this.$store
         store.commit('TOGGLE_LOADING')
         this.$http.get(store.state.serverURI + '/bookmarks?page=' + page).then(function (response) {
           store.commit('TOGGLE_LOADING')
           this.all = response.data.last_page
-          this.cur = response.data.current_page
           this.bookmarks = response.data.data
+        }, function (response) {
+          store.commit('TOGGLE_LOADING')
+          if (response.data.status_code === 401) {
+            this.$store.commit('SET_USER', null)
+            this.$store.commit('SET_TOKEN', null)
+            if (window.localStorage) {
+              window.localStorage.setItem('user', null)
+              window.localStorage.setItem('token', null)
+            }
+            this.$router.push('/login')
+          }
+        })
+      },
+      createData () {
+        this.showCreate = true
+      },
+      editData (bookmark) {
+        this.showEdit = true
+        this.origin_bookmark = bookmark
+      },
+      deleteData (id) {
+        var store = this.$store
+        store.commit('TOGGLE_LOADING')
+        this.$http.delete(store.state.serverURI + '/bookmarks/' + id).then(function (response) {
+          store.commit('TOGGLE_LOADING')
+          this.fetchData(this.cur)
         }, function (response) {
           store.commit('TOGGLE_LOADING')
           if (response.data.status_code === 401) {

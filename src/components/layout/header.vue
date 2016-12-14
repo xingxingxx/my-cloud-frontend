@@ -105,7 +105,7 @@
                                     <a href="#" class="btn btn-default btn-flat">个人主页</a>
                                 </div>
                                 <div class="pull-right">
-                                    <button v-on:click="logout" class="btn btn-default btn-flat">注销登录</button>
+                                    <button v-on:click="logout" class="btn btn-default btn-flat">退出登录</button>
                                 </div>
                             </li>
                         </ul>

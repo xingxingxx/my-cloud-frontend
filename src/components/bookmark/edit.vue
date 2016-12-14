@@ -1,29 +1,24 @@
 <template>
-    <div class="modal" style="display: block;">
+    <div class="modal" v-bind:style="'display:'+(showEdit?'block':'none')">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <router-link to="/bookmark/create" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" v-on:click="close" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    </router-link>
-                    <h4 class="modal-title">新增云书签</h4>
+                    <h4 class="modal-title">编辑书签</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="name">书签名称</label>
-                        <input type="text" class="form-control" id="name"
-                               placeholder="自定义书签名称">
-                        <p class="help-block">为空则系统自动填写</p>
+                        <label>书签名称</label>
+                        <input type="text" class="form-control" v-model="bookmark.title" placeholder="为空则系统自动提取">
                     </div>
                     <div class="form-group">
-                        <label for="url">书签路径</label>
-                        <input type="text" class="form-control" id="url"
-                               placeholder="网站路径">
-                        <p class="help-block">如：http://www.example.com</p>
+                        <label>书签路径</label>
+                        <input type="text" class="form-control" v-model="bookmark.url" placeholder="请将链接粘贴到此处">
                     </div>
                     <div class="form-group">
-                        <label for="category_id">分类</label>
-                        <select class="form-control" id="category_id">
+                        <label>分类</label>
+                        <select class="form-control" v-model="bookmark.category_id">
                             <option value="1">论坛社区</option>
                             <option value="2">客户网站</option>
                             <option value="3">开发工具</option>
@@ -31,8 +26,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <router-link to="/bookmark" class="btn btn-default pull-left" data-dismiss="modal">取消</router-link>
-                    <button type="button" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default pull-left" v-on:click="close">关闭</button>
+                    <button type="button" class="btn btn-primary" v-on:click="saveData">提交</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -40,3 +35,46 @@
         <!-- /.modal-dialog -->
     </div>
 </template>
+
+<style>
+
+</style>
+
+<script>
+  export default {
+    props: ['showEdit', 'origin_bookmark'],
+    data: function () {
+      return {}
+    },
+    computed: {
+      bookmark: function () {
+        return this.origin_bookmark
+      }
+    },
+    methods: {
+      saveData () {
+        var store = this.$store
+        store.commit('TOGGLE_LOADING')
+        this.$http.put(store.state.serverURI + '/bookmarks/' + this.bookmark.id, this.bookmark).then(function (response) {
+          store.commit('TOGGLE_LOADING')
+          this.bookmark = response.data
+          this.$emit('save-data', 1)
+        }, function (response) {
+          store.commit('TOGGLE_LOADING')
+          if (response.data.status_code === 401) {
+            this.$store.commit('SET_USER', null)
+            this.$store.commit('SET_TOKEN', null)
+            if (window.localStorage) {
+              window.localStorage.setItem('user', null)
+              window.localStorage.setItem('token', null)
+            }
+            this.$router.push('/login')
+          }
+        })
+      },
+      close () {
+        this.$emit('save-data', 1)
+      }
+    }
+  }
+</script>
