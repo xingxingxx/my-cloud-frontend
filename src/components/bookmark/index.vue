@@ -38,7 +38,7 @@
                                         <i class="fa fa-edit"></i> 编辑
                                     </button>
                                     <button class="btn btn-danger btn-xs" v-on:click="deleteData(bookmark.id)">
-                                        <i class="fa fa-trash"></i>删除
+                                        <i class="fa fa-trash"></i> 删除
                                     </button>
                                 </td>
                             </tr>
@@ -51,6 +51,9 @@
                             <div class="col-sm-5">
                                 <button class="btn btn-primary btn-sm" v-on:click="createData">
                                     <i class="fa fa-plus"></i> 添加
+                                </button>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fa fa-bars"></i> 分类管理
                                 </button>
                             </div>
                             <div class="col-sm-7 clearfix">
@@ -65,8 +68,8 @@
         </div>
         <!-- /.col -->
         </div>
-        <create :showCreate="showCreate" v-on:save-data="fetchData"></create>
-        <edit :showEdit="showEdit" :origin_bookmark="origin_bookmark" v-on:save-data="fetchData"></edit>
+        <create :showCreate="showCreate" v-on:save-data="fetchData" v-on:close="close"></create>
+        <edit :showEdit="showEdit" :origin_bookmark="origin_bookmark" v-on:save-data="fetchData" v-on:close="close"></edit>
     </section>
 </template>
 
@@ -116,6 +119,10 @@
             this.$router.push('/login')
           }
         })
+      },
+      close () {
+        this.showCreate = false
+        this.showEdit = false
       },
       createData () {
         this.showCreate = true

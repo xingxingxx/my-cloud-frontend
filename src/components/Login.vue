@@ -85,7 +85,7 @@ module.exports = {
       })
     },
     toggleLoading: function () {
-      this.loading = (this.loading === '') ? 'bg-navy' : ''
+      this.loading = (this.loading === '') ? '' : ''
     },
     resetResponse: function () {
       this.response = ''

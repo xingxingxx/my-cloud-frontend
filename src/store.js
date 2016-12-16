@@ -6,7 +6,9 @@ Vue.use(Vuex)
 const state = {
   callingAPI: false,
   searching: '',
-  serverURI: 'http://my-cloud-api.app:8000/api',
+  serverURI: 'http://api.my-cloud.app:8000',
+  apiVersion: 'v1',
+  apiHost: 'http://api.my-cloud.app:8000',
   user: null,
   token: null,
   userInfo: {

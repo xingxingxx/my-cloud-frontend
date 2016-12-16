@@ -73,7 +73,7 @@
         })
       },
       close () {
-        this.$emit('save-data', 1)
+        this.$emit('close', 1)
       }
     }
   }

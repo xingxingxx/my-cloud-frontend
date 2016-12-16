@@ -24,19 +24,19 @@
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
                 <li class="header">操作面板</li>
-                <li :class="{active:$route.path.indexOf('/home')>=0}">
+                <li :class="{active:$route.path=='/'}">
                     <router-link to="/">
                         <i class="fa fa-home"></i>
                         <span>我的面板</span>
                     </router-link>
                 </li>
-                <li :class="{active:$route.path.indexOf('/bookmark')>=0}">
+                <li :class="{active:$route.path=='/bookmark'}">
                     <router-link to="/bookmark">
                         <i class="fa fa-bookmark"></i>
                         <span>云书签</span>
                     </router-link>
                 </li>
-                <li :class="{active:$route.path.indexOf('/article')>=0}">
+                <li :class="{active:$route.path=='/article'}">
                     <router-link to="/article">
                         <i class="fa fa-paper-plane"></i>
                         <span>云文章</span>

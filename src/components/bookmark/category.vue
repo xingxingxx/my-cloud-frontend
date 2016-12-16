@@ -1,5 +1,5 @@
 <template>
-    <div class="modal" v-bind:style="'display:'+(showCreate?'block':'none')">
+    <div class="modal" v-bind:style="'display:'+(showCategory?'block':'none')">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -35,39 +35,3 @@
         <!-- /.modal-dialog -->
     </div>
 </template>
-
-<script>
-  export default {
-    props: ['showCreate'],
-    data: function () {
-      return {
-        bookmark: {}
-      }
-    },
-    methods: {
-      saveData () {
-        var store = this.$store
-        store.commit('TOGGLE_LOADING')
-        this.$http.post(store.state.serverURI + '/bookmarks', this.bookmark).then(function (response) {
-          store.commit('TOGGLE_LOADING')
-          this.bookmark = {}
-          this.$emit('save-data', 1)
-        }, function (response) {
-          store.commit('TOGGLE_LOADING')
-          if (response.data.status_code === 401) {
-            this.$store.commit('SET_USER', null)
-            this.$store.commit('SET_TOKEN', null)
-            if (window.localStorage) {
-              window.localStorage.setItem('user', null)
-              window.localStorage.setItem('token', null)
-            }
-            this.$router.push('/login')
-          }
-        })
-      },
-      close () {
-        this.$emit('close', 1)
-      }
-    }
-  }
-</script>
