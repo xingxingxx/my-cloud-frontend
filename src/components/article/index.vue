@@ -90,13 +90,13 @@
         this.cur = page
         var store = this.$store
         store.commit('TOGGLE_LOADING')
-        this.$http.get(store.state.serverURI + '/articles?page=' + page).then(function (response) {
+        this.$http.get(store.state.apiHost + '/article?page=' + page).then(function (response) {
           store.commit('TOGGLE_LOADING')
-          this.all = response.data.last_page
+          this.all = response.data.meta.pagination.total_pages
           this.articles = response.data.data
         }, function (response) {
           store.commit('TOGGLE_LOADING')
-          if (response.data.status_code === 401) {
+          if (response.status === 401) {
             this.$store.commit('SET_USER', null)
             this.$store.commit('SET_TOKEN', null)
             if (window.localStorage) {

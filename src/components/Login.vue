@@ -19,7 +19,7 @@
                         <div v-if=response class="text-red"><p>{{response}}</p></div>
                     </div>
                     <div class="col-xs-4">
-                        <button type="submit" v-bind:class="'btn btn-primary btn-block btn-flat ' + loading" >登录</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-flat" >登录</button>
                     </div>
                 </div>
             </form>
@@ -32,7 +32,6 @@ module.exports = {
   name: 'Login',
   data: function (router) {
     return {
-      loading: '',
       email: '',
       password: '',
       response: ''
@@ -43,49 +42,32 @@ module.exports = {
       //  Change submit button
       var self = this
       var store = this.$store
-      this.toggleLoading()
       this.resetResponse()
       store.commit('TOGGLE_LOADING')
       //  Login
-      this.$http.post(store.state.serverURI + '/login', {email: this.email, password: this.password}).then(function (response) {
+      this.$http.post(store.state.apiHost + '/login', {email: this.email, password: this.password}).then(function (response) {
         store.commit('TOGGLE_LOADING')
-        if (response.data) {
-          var data = response.data
-          if (data.user) {
-            store.commit('SET_USER', data.user)
-            var token = 'Bearer ' + data.token
-            store.commit('SET_TOKEN', token)
-            // Save to local storage as well
-            if (window.localStorage) {
-              window.localStorage.setItem('user', JSON.stringify(data.user))
-              window.localStorage.setItem('token', token)
-            }
-            this.$router.push('/')
+        var data = response.data
+        if (data.user) {
+          store.commit('SET_USER', data.user)
+          var token = 'Bearer ' + data.token
+          store.commit('SET_TOKEN', token)
+          // Save to local storage as well
+          if (window.localStorage) {
+            window.localStorage.setItem('user', JSON.stringify(data.user))
+            window.localStorage.setItem('token', token)
           }
-        } else {
-          self.response = '未收到回复，请几分钟后重试！'
+          this.$router.push('/')
         }
-        self.toggleLoading()
       }, function (response) {
         store.commit('TOGGLE_LOADING')
-        if (response.data) {
-          var data = response.data
-          if (data.error && data.error === 'invalid_credentials') {
-            self.response = '用户名或密码错误，请重试！'
-          } else if (data.error) {
-            self.response = data.error
-          } else if (data.message) {
-            self.respons = data.message
-          }
+        if (response.status === 401) {
+          self.response = '用户名或密码错误！'
         } else {
-          self.response = '不好，服务器似乎连不上了！'
+          self.response = '服务器错误！'
         }
         console.log('Error', response)
-        self.toggleLoading()
       })
-    },
-    toggleLoading: function () {
-      this.loading = (this.loading === '') ? '' : ''
     },
     resetResponse: function () {
       this.response = ''

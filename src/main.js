@@ -5,7 +5,7 @@ import routes from './routes'
 import store from './store'
 import App from './components/App.vue'
 
-import { domain, count, prettyDate, pluralize } from './filters'
+import {domain, count, prettyDate, pluralize} from './filters'
 Vue.filter('count', count)
 Vue.filter('domain', domain)
 Vue.filter('prettyDate', prettyDate)
@@ -37,7 +37,7 @@ var router = new VueRouter({
   routes,
   mode: 'history',
   scrollBehavior: function (to, from, savedPosition) {
-    return savedPosition || { x: 0, y: 0 }
+    return savedPosition || {x: 0, y: 0}
   }
 })
 
@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
   if ((to.matched.some(record => record.meta.auth)) && (store.state.user == null)) {
     return next({
       path: '/login',
-      query: { redirect: to.fullPath }
+      query: {redirect: to.fullPath}
     })
   }
   if ((to.path === '/login') && (store.state.user !== null)) {
