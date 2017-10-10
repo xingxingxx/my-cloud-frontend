@@ -30,17 +30,37 @@
                         <span>我的面板</span>
                     </router-link>
                 </li>
-                <li :class="{active:$route.path=='/bookmark'}">
-                    <router-link to="/bookmark">
+                <li class="treeview">
+                    <a href="#">
                         <i class="fa fa-bookmark"></i>
                         <span>云书签</span>
-                    </router-link>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" :class="{active:$route.path=='/bookmark'}">
+                        <li :class="{active:$route.path=='/bookmark-category'}">
+                            <router-link to="/bookmark-category"><i class="fa fa-circle-o"></i> 分类</a></router-link>
+                        <li :class="{active:$route.path=='/bookmark'}">
+                            <router-link to="/bookmark"><i class="fa fa-circle-o"></i> 列表</router-link>
+                        </li>
+                    </ul>
                 </li>
-                <li :class="{active:$route.path=='/article'}">
-                    <router-link to="/article">
-                        <i class="fa fa-paper-plane"></i>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-file-text"></i>
                         <span>云文章</span>
-                    </router-link>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" :class="{active:$route.path=='/article'}">
+                        <li><a href="#"><i class="fa fa-circle-o"></i> 分类</a></li>
+                        <li><a href="#"><i class="fa fa-circle-o"></i> 标签</a></li>
+                        <li :class="{active:$route.path=='/article'}">
+                            <router-link to="/article"><i class="fa fa-circle-o"></i> 列表</router-link>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </section>

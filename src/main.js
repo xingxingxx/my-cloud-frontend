@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Resource from 'vue-resource'
+import ElementUI from 'element-ui'
 import routes from './routes'
 import store from './store'
 import App from './components/App.vue'
@@ -13,6 +14,7 @@ Vue.filter('pluralize', pluralize)
 
 Vue.use(VueRouter)
 Vue.use(Resource)
+Vue.use(ElementUI)
 
 // Check local storage to handle refreshes
 if (window.localStorage) {

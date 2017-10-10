@@ -28,8 +28,8 @@
                 <th>创建时间</th>
                 <th style="width: 140px">操作</th>
               </tr>
-              <tr v-for="bookmark in bookmarks">
-                <td>{{ bookmark.id }}.</td>
+              <tr v-for="(bookmark, index) in bookmarks">
+                <td>{{ index+1 }}.</td>
                 <td><a v-bind:href="bookmark.url" target="_blank">{{ bookmark.title }}</a></td>
                 <td>{{ bookmark.category_id }}</td>
                 <td>{{ bookmark.created_at }}</td>
@@ -51,9 +51,6 @@
               <div class="col-sm-5">
                 <button class="btn btn-primary btn-sm" v-on:click="createData">
                   <i class="fa fa-plus"></i> 添加
-                </button>
-                <button class="btn btn-primary btn-sm">
-                  <i class="fa fa-bars"></i> 分类管理
                 </button>
               </div>
               <div class="col-sm-7 clearfix">

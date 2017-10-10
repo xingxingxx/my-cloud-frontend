@@ -29,8 +29,8 @@
                                 <th>创建时间</th>
                                 <th style="width: 140px">操作</th>
                             </tr>
-                            <tr v-for="article in articles">
-                                <td>{{ article.id }}.</td>
+                            <tr v-for="(article, index) in articles">
+                                <td>{{ index+1 }}.</td>
                                 <td>{{ article.title }}</td>
                                 <td>{{ article.category_id }}</td>
                                 <td><span class="label label-default">{{ article.abstract }}</span></td>
